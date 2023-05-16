@@ -76,11 +76,6 @@ let UserService = class UserService {
         }
         if (moment().isAfter(users.otp.expires_at)) {
             users = await this.userRepo.update({ _id }, { $set: JSON.parse(JSON.stringify({ 'otp.value': null })) });
-            throw new common_2.HttpException({
-                success: false,
-                error: 'OTP has been expired.',
-                message: 'Cannot verify otp.'
-            }, common_2.HttpStatus.BAD_REQUEST);
         }
         users = await this.userRepo.update({ _id }, {
             $set: JSON.parse(JSON.stringify({ is_verified: true, 'otp.value': null }))
