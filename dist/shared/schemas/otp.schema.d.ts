@@ -23,23 +23,13 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { Name } from 'src/shared/schemas/name.schema';
-import { PhoneNumber } from 'src/shared/schemas/phone-number.schema';
-import { s3Object } from 'src/shared/schemas/s3-object.schema';
-import { Otp } from 'src/shared/schemas/otp.schema';
-export declare class User {
-    name: Name;
-    phone_number: PhoneNumber;
-    email: string;
-    password: string;
-    profile_pic: s3Object;
-    otp: Otp;
-    is_verified: boolean;
-    is_active: boolean;
+export declare class Otp {
+    value: number;
+    expires_at: Date;
 }
-export type UserDocument = User & Document;
-export declare const UserSchema: MongooseSchema<User, import("mongoose").Model<User, any, any, any, Document<unknown, any, User> & Omit<User & {
+export type OtpDocument = Otp & Document;
+export declare const OtpSchema: MongooseSchema<Otp, import("mongoose").Model<Otp, any, any, any, Document<unknown, any, Otp> & Omit<Otp & {
     _id: import("mongoose").Types.ObjectId;
-}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User, Document<unknown, {}, import("mongoose").FlatRecord<User>> & Omit<import("mongoose").FlatRecord<User> & {
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Otp, Document<unknown, {}, import("mongoose").FlatRecord<Otp>> & Omit<import("mongoose").FlatRecord<Otp> & {
     _id: import("mongoose").Types.ObjectId;
 }, never>>;

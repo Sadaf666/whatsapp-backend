@@ -9,17 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
-const common_1 = require("@nestjs/common");
-const user_service_1 = require("./user.service");
-let UserController = class UserController {
-    constructor(userService) {
-        this.userService = userService;
-    }
+exports.OtpSchema = exports.Otp = void 0;
+const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
+let Otp = class Otp {
 };
-UserController = __decorate([
-    (0, common_1.Controller)('user'),
-    __metadata("design:paramtypes", [user_service_1.UserService])
-], UserController);
-exports.UserController = UserController;
-//# sourceMappingURL=user.controller.js.map
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Value the of the otp.' }),
+    (0, mongoose_1.Prop)({ default: null }),
+    __metadata("design:type", Number)
+], Otp.prototype, "value", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The expiration time of the otp.' }),
+    (0, mongoose_1.Prop)({ default: null }),
+    __metadata("design:type", Date)
+], Otp.prototype, "expires_at", void 0);
+Otp = __decorate([
+    (0, mongoose_1.Schema)()
+], Otp);
+exports.Otp = Otp;
+exports.OtpSchema = mongoose_1.SchemaFactory.createForClass(Otp);
+//# sourceMappingURL=otp.schema.js.map
