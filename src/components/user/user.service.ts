@@ -53,7 +53,14 @@ export class UserService {
 
 			users = await this.userRepo.update(
 				{ _id: users._id },
-				{ $set: { 'otp.value': otp, 'otp.expires_at': expires_at } }
+				{
+					$set: JSON.parse(
+						JSON.stringify({
+							'otp.value': otp,
+							'otp.expires_at': expires_at
+						})
+					)
+				}
 			);
 
 			return { token, users };
@@ -73,9 +80,62 @@ export class UserService {
 		return { token, users };
 	}
 
-	create(createUserDto: CreateUserDto) {
-		return 'This action adds a new user';
+	async verify(_id: string, verifyUserDto: VerifyUserDto) {
+		const { otp } = verifyUserDto;
+
+		let users: UserDocument = await this.userRepo.getOne({ _id });
+
+		if (!users) {
+			throw new HttpException(
+				{
+					success: false,
+					error: `User not found with this ${_id} _id.`,
+					message: 'Cannot verify otp.'
+				},
+				HttpStatus.BAD_REQUEST
+			);
+		}
+
+		if (users.otp.value !== +otp) {
+			throw new HttpException(
+				{
+					success: false,
+					error: 'Invalid OTP.',
+					message: 'Invalid OTP.'
+				},
+				HttpStatus.BAD_REQUEST
+			);
+		}
+
+		if (moment().isAfter(users.otp.expires_at)) {
+			users = await this.userRepo.update(
+				{ _id },
+				{ $set: JSON.parse(JSON.stringify({ 'otp.value': null })) }
+			);
+
+			throw new HttpException(
+				{
+					success: false,
+					error: 'OTP has been expired.',
+					message: 'Cannot verify otp.'
+				},
+				HttpStatus.BAD_REQUEST
+			);
+		}
+
+		users = await this.userRepo.update(
+			{ _id },
+			{
+				$set: JSON.parse(
+					JSON.stringify({ is_verified: true, 'otp.value': null })
+				)
+			}
+		);
 	}
+
+	// create(createUserDto: CreateUserDto) {
+	// 	return 'This action adds a new user';
+	// }
 
 	// findAll() {
 	// 	return `This action returns all user`;

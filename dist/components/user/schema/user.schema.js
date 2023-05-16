@@ -15,6 +15,7 @@ const swagger_1 = require("@nestjs/swagger");
 const name_schema_1 = require("../../../shared/schemas/name.schema");
 const phone_number_schema_1 = require("../../../shared/schemas/phone-number.schema");
 const s3_object_schema_1 = require("../../../shared/schemas/s3-object.schema");
+const otp_schema_1 = require("../../../shared/schemas/otp.schema");
 let User = class User {
 };
 __decorate([
@@ -42,6 +43,16 @@ __decorate([
     (0, mongoose_1.Prop)({ default: s3_object_schema_1.s3Object, type: s3_object_schema_1.s3Object }),
     __metadata("design:type", s3_object_schema_1.s3Object)
 ], User.prototype, "profile_pic", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'The status of the document.' }),
+    (0, mongoose_1.Prop)({ default: otp_schema_1.Otp, type: otp_schema_1.Otp }),
+    __metadata("design:type", otp_schema_1.Otp)
+], User.prototype, "otp", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Verification status of the user.' }),
+    (0, mongoose_1.Prop)({ default: false, index: true }),
+    __metadata("design:type", Boolean)
+], User.prototype, "is_verified", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The status of the document.' }),
     (0, mongoose_1.Prop)({ default: true, index: true }),
