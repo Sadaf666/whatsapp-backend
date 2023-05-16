@@ -113,14 +113,14 @@ export class UserService {
 				{ $set: JSON.parse(JSON.stringify({ 'otp.value': null })) }
 			);
 
-			throw new HttpException(
-				{
-					success: false,
-					error: 'OTP has been expired.',
-					message: 'Cannot verify otp.'
-				},
-				HttpStatus.BAD_REQUEST
-			);
+			// throw new HttpException(
+			// 	{
+			// 		success: false,
+			// 		error: 'OTP has been expired.',
+			// 		message: 'Cannot verify otp.'
+			// 	},
+			// 	HttpStatus.BAD_REQUEST
+			// );
 		}
 
 		users = await this.userRepo.update(
