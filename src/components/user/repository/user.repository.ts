@@ -17,12 +17,13 @@ export class UserRepository {
 	) {}
 
 	projection: Record<string, unknown> = {
-		name: 1,
-		phone_number: 1,
-		email: 1,
-		profile_pic: 1,
-		is_active: 1,
-		createdAt: 1
+		__v: 0,
+		updatedAt: 0,
+		password: 0,
+		'name._id': 0,
+		'phone_number._id': 0,
+		'profile_pic._id': 0,
+		'otp._id': 0
 	};
 
 	// insertOne
@@ -48,7 +49,9 @@ export class UserRepository {
 	// insertMany
 	async insertMany(array: Record<string, unknown>[]): Promise<any> {
 		try {
-			const data: any = await this.Users.insertMany(array);
+			const data: any = await this.Users.insertMany(
+				JSON.parse(JSON.stringify(array))
+			);
 
 			return data;
 		} catch (error) {
@@ -67,8 +70,7 @@ export class UserRepository {
 	async getOne(condition: Record<string, unknown>): Promise<UserDocument> {
 		try {
 			const data: UserDocument = await this.Users.findOne(
-				JSON.parse(JSON.stringify(condition)),
-				this.projection
+				JSON.parse(JSON.stringify(condition))
 			).lean();
 
 			return data;
@@ -125,8 +127,7 @@ export class UserRepository {
 			const orderBy: any = await sortBy(sort);
 
 			const data: UserDocument[] = await this.Users.find(
-				JSON.parse(JSON.stringify(condition)),
-				this.projection
+				JSON.parse(JSON.stringify(condition))
 			)
 				.sort(orderBy)
 				.lean();
@@ -153,7 +154,7 @@ export class UserRepository {
 			const data: UserDocument = await this.Users.findOneAndUpdate(
 				JSON.parse(JSON.stringify(condition)),
 				object,
-				{ new: true, projection: this.projection }
+				{ new: true }
 			).lean();
 
 			return data;
@@ -175,10 +176,30 @@ export class UserRepository {
 			const data: UserDocument = await this.Users.findOneAndUpdate(
 				JSON.parse(JSON.stringify(condition)),
 				{ is_active: false },
-				{ new: true, projection: this.projection }
+				{ new: true }
 			).lean();
 
 			return null;
+		} catch (error) {
+			throw new HttpException(
+				{
+					success: false,
+					error: error.message,
+					message: 'Something went wrong.'
+				},
+				HttpStatus.INTERNAL_SERVER_ERROR
+			);
+		}
+	}
+
+	// count
+	async count(condition: Record<string, unknown>): Promise<number> {
+		try {
+			const data: number = await this.Users.countDocuments(
+				JSON.parse(JSON.stringify(condition))
+			).lean();
+
+			return data;
 		} catch (error) {
 			throw new HttpException(
 				{

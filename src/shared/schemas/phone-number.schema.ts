@@ -14,11 +14,11 @@ export class PhoneNumber {
 	country_code: string;
 
 	@ApiProperty({ description: 'Number for phone number.' })
-	@Prop({ default: true, trim: true })
+	@Prop({ default: null, trim: true })
 	number: string;
 
 	@ApiProperty({ description: 'Full number with country code.' })
-	@Prop({ default: true, trim: true })
+	@Prop({ default: null, trim: true })
 	full_number: string;
 }
 

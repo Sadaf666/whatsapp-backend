@@ -13,6 +13,7 @@ const config_1 = require("@nestjs/config");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const jwt_strategy_1 = require("./jwt.strategy");
+const user_module_1 = require("../user/user.module");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -27,11 +28,12 @@ AuthModule = __decorate([
                     }
                 }),
                 inject: [config_1.ConfigService]
-            })
+            }),
+            user_module_1.UserModule
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
-        exports: [auth_service_1.AuthService]
+        exports: [auth_service_1.AuthService, jwt_1.JwtModule]
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;

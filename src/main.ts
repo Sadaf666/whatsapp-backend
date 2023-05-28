@@ -7,6 +7,7 @@ import {
 	NestExpressApplication
 } from '@nestjs/platform-express';
 import { urlencoded, json } from 'express';
+import { ValidationPipe } from '@nestjs/common';
 
 // modules
 import { AppModule } from './app.module';
@@ -26,6 +27,8 @@ async function bootstrap() {
 	app.use(urlencoded({ extended: true }));
 	app.use(json());
 	app.set('trust proxy');
+
+	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
 	swaggerSetup(app);
 

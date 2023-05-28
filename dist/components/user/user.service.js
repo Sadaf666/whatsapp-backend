@@ -26,7 +26,9 @@ let UserService = class UserService {
     async signup(signupUserDto) {
         const { country_code, number } = signupUserDto;
         let users = await this.userRepo.getOne({
-            'phone_number.country_code': country_code,
+            'phone_number.country_code': country_code.includes('+')
+                ? country_code
+                : `+${country_code}`,
             'phone_number.number': number,
             is_active: true
         });
@@ -47,7 +49,9 @@ let UserService = class UserService {
             return { token, users };
         }
         users = await this.userRepo.insertOne({
-            'phone_number.country_code': country_code,
+            'phone_number.country_code': country_code.includes('+')
+                ? country_code
+                : `+${country_code}`,
             'phone_number.number': number,
             'otp.value': otp,
             'otp.expires_at': expires_at
@@ -85,6 +89,20 @@ let UserService = class UserService {
         users = await this.userRepo.update({ _id }, {
             $set: JSON.parse(JSON.stringify({ is_verified: true, 'otp.value': null }))
         });
+        return { users };
+    }
+    async findAll(filterUserDto) {
+        const { page, limit, sort } = filterUserDto;
+        let limits = limit ? +limit : 20, pages = page ? +page : 1, skip = pages > 1 ? (pages - 1) * limits : 0;
+        const condition = { is_active: true };
+        const users = await this.userRepo.getAllWithPagination(condition, sort, skip, limits);
+        const totalResults = await this.userRepo.count(condition);
+        pages = Math.ceil(totalResults / limits);
+        return { users, totalResults, pages };
+    }
+    async findOne(_id) {
+        const users = await this.userRepo.getOne({ _id });
+        return { users };
     }
 };
 UserService = __decorate([

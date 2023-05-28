@@ -1,1 +1,1 @@
-export declare const Public: (...dataOrPipes: any[]) => ParameterDecorator;
+export declare const Public: () => import("@nestjs/common").CustomDecorator<string>;

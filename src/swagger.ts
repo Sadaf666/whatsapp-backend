@@ -3,9 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // schema
+import { User } from './components/user/schema/user.schema';
 
 // modules
 import { AppModule } from './app.module';
+import { UserModule } from './components/user/user.module';
 
 const { BASE_URL } = process.env;
 
@@ -28,8 +30,8 @@ export function swaggerSetup(app: INestApplication) {
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config, {
-		extraModels: [],
-		include: [AppModule]
+		extraModels: [User],
+		include: [AppModule, UserModule]
 	});
 
 	SwaggerModule.setup('api-docs', app, document);

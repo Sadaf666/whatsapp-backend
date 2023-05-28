@@ -26,12 +26,12 @@ __decorate([
 ], PhoneNumber.prototype, "country_code", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'Number for phone number.' }),
-    (0, mongoose_1.Prop)({ default: true, trim: true }),
+    (0, mongoose_1.Prop)({ default: null, trim: true }),
     __metadata("design:type", String)
 ], PhoneNumber.prototype, "number", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'Full number with country code.' }),
-    (0, mongoose_1.Prop)({ default: true, trim: true }),
+    (0, mongoose_1.Prop)({ default: null, trim: true }),
     __metadata("design:type", String)
 ], PhoneNumber.prototype, "full_number", void 0);
 PhoneNumber = __decorate([

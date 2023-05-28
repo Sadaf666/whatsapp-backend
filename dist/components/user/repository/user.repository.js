@@ -23,12 +23,13 @@ let UserRepository = class UserRepository {
     constructor(Users) {
         this.Users = Users;
         this.projection = {
-            name: 1,
-            phone_number: 1,
-            email: 1,
-            profile_pic: 1,
-            is_active: 1,
-            createdAt: 1
+            __v: 0,
+            updatedAt: 0,
+            password: 0,
+            'name._id': 0,
+            'phone_number._id': 0,
+            'profile_pic._id': 0,
+            'otp._id': 0
         };
     }
     async insertOne(object) {
@@ -46,7 +47,7 @@ let UserRepository = class UserRepository {
     }
     async insertMany(array) {
         try {
-            const data = await this.Users.insertMany(array);
+            const data = await this.Users.insertMany(JSON.parse(JSON.stringify(array)));
             return data;
         }
         catch (error) {
@@ -59,7 +60,7 @@ let UserRepository = class UserRepository {
     }
     async getOne(condition) {
         try {
-            const data = await this.Users.findOne(JSON.parse(JSON.stringify(condition)), this.projection).lean();
+            const data = await this.Users.findOne(JSON.parse(JSON.stringify(condition))).lean();
             return data;
         }
         catch (error) {
@@ -91,7 +92,7 @@ let UserRepository = class UserRepository {
     async getAll(condition, sort) {
         try {
             const orderBy = await (0, shared_function_1.sortBy)(sort);
-            const data = await this.Users.find(JSON.parse(JSON.stringify(condition)), this.projection)
+            const data = await this.Users.find(JSON.parse(JSON.stringify(condition)))
                 .sort(orderBy)
                 .lean();
             return data;
@@ -106,7 +107,7 @@ let UserRepository = class UserRepository {
     }
     async update(condition, object) {
         try {
-            const data = await this.Users.findOneAndUpdate(JSON.parse(JSON.stringify(condition)), object, { new: true, projection: this.projection }).lean();
+            const data = await this.Users.findOneAndUpdate(JSON.parse(JSON.stringify(condition)), object, { new: true }).lean();
             return data;
         }
         catch (error) {
@@ -119,8 +120,21 @@ let UserRepository = class UserRepository {
     }
     async remove(condition) {
         try {
-            const data = await this.Users.findOneAndUpdate(JSON.parse(JSON.stringify(condition)), { is_active: false }, { new: true, projection: this.projection }).lean();
+            const data = await this.Users.findOneAndUpdate(JSON.parse(JSON.stringify(condition)), { is_active: false }, { new: true }).lean();
             return null;
+        }
+        catch (error) {
+            throw new common_2.HttpException({
+                success: false,
+                error: error.message,
+                message: 'Something went wrong.'
+            }, common_2.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    async count(condition) {
+        try {
+            const data = await this.Users.countDocuments(JSON.parse(JSON.stringify(condition))).lean();
+            return data;
         }
         catch (error) {
             throw new common_2.HttpException({

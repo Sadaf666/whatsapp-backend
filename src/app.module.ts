@@ -1,8 +1,9 @@
 // external libraries
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
+import { MongooseModule } from '@nestjs/mongoose';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 // middleware
 import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
@@ -12,6 +13,10 @@ import { AppController } from './app.controller';
 
 // service
 import { AppService } from './app.service';
+
+// module
+import { UserModule } from './components/user/user.module';
+import { AuthModule } from './components/auth/auth.module';
 
 @Module({
 	imports: [
@@ -32,10 +37,22 @@ import { AppService } from './app.service';
 				}),
 				new winston.transports.File({ filename: 'combined.log' })
 			]
-		})
+		}),
+
+		MongooseModule.forRootAsync({
+			useFactory: async (configService: ConfigService) => ({
+				uri: configService.get<string>('MONGO_URI'),
+				useUnifiedTopology: true,
+				useNewUrlParser: true
+			}),
+			inject: [ConfigService]
+		}),
+
+		AuthModule,
+		UserModule
 	],
 	controllers: [AppController],
-	providers: [AppService]
+	providers: [AppService, ConfigService]
 })
 export class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

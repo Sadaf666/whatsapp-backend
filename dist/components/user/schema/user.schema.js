@@ -20,12 +20,12 @@ let User = class User {
 };
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The name of the user' }),
-    (0, mongoose_1.Prop)({ default: name_schema_1.Name, type: name_schema_1.Name }),
+    (0, mongoose_1.Prop)({ default: new name_schema_1.Name(), type: name_schema_1.Name }),
     __metadata("design:type", name_schema_1.Name)
 ], User.prototype, "name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The phone number of the user' }),
-    (0, mongoose_1.Prop)({ default: phone_number_schema_1.PhoneNumber, type: phone_number_schema_1.PhoneNumber }),
+    (0, mongoose_1.Prop)({ default: new phone_number_schema_1.PhoneNumber(), type: phone_number_schema_1.PhoneNumber }),
     __metadata("design:type", phone_number_schema_1.PhoneNumber)
 ], User.prototype, "phone_number", void 0);
 __decorate([
@@ -40,12 +40,12 @@ __decorate([
 ], User.prototype, "password", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The profile picture of the user' }),
-    (0, mongoose_1.Prop)({ default: s3_object_schema_1.s3Object, type: s3_object_schema_1.s3Object }),
+    (0, mongoose_1.Prop)({ default: new s3_object_schema_1.s3Object(), type: s3_object_schema_1.s3Object }),
     __metadata("design:type", s3_object_schema_1.s3Object)
 ], User.prototype, "profile_pic", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The status of the document.' }),
-    (0, mongoose_1.Prop)({ default: otp_schema_1.Otp, type: otp_schema_1.Otp }),
+    (0, mongoose_1.Prop)({ default: new otp_schema_1.Otp(), type: otp_schema_1.Otp }),
     __metadata("design:type", otp_schema_1.Otp)
 ], User.prototype, "otp", void 0);
 __decorate([
@@ -59,8 +59,23 @@ __decorate([
     __metadata("design:type", Boolean)
 ], User.prototype, "is_active", void 0);
 User = __decorate([
-    (0, mongoose_1.Schema)({ collection: 'users', timestamps: true })
+    (0, mongoose_1.Schema)({
+        collection: 'users',
+        timestamps: true,
+        toJSON: {
+            transform: (doc, ret) => {
+                delete ret.password;
+                delete ret.__v;
+                delete ret.updatedAt;
+                delete ret.name._id;
+                delete ret.phone_number._id;
+                delete ret.profile_pic._id;
+                delete ret.otp._id;
+                return ret;
+            }
+        }
+    })
 ], User);
 exports.User = User;
-exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
+exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User).index({});
 //# sourceMappingURL=user.schema.js.map

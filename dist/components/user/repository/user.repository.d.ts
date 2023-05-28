@@ -11,5 +11,6 @@ export declare class UserRepository {
     getAll(condition: Record<string, unknown>, sort: string): Promise<UserDocument[]>;
     update(condition: Record<string, unknown>, object: Record<string, unknown>): Promise<UserDocument>;
     remove(condition: Record<string, unknown>): Promise<any>;
+    count(condition: Record<string, unknown>): Promise<number>;
     test(): Promise<void>;
 }

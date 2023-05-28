@@ -9,11 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const winston = require("winston");
 const nest_winston_1 = require("nest-winston");
+const mongoose_1 = require("@nestjs/mongoose");
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const logger_middleware_1 = require("./shared/middlewares/logger.middleware");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const user_module_1 = require("./components/user/user.module");
+const auth_module_1 = require("./components/auth/auth.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes('*');
@@ -33,10 +36,20 @@ AppModule = __decorate([
                     }),
                     new winston.transports.File({ filename: 'combined.log' })
                 ]
-            })
+            }),
+            mongoose_1.MongooseModule.forRootAsync({
+                useFactory: async (configService) => ({
+                    uri: configService.get('MONGO_URI'),
+                    useUnifiedTopology: true,
+                    useNewUrlParser: true
+                }),
+                inject: [config_1.ConfigService]
+            }),
+            auth_module_1.AuthModule,
+            user_module_1.UserModule
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService]
+        providers: [app_service_1.AppService, config_1.ConfigService]
     })
 ], AppModule);
 exports.AppModule = AppModule;

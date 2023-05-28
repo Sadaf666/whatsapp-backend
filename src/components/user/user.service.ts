@@ -7,8 +7,9 @@ import { ConfigService } from '@nestjs/config';
 // dto
 import { SignUpUserDto } from './dto/sigup-user.dto';
 import { VerifyUserDto } from './dto/verify-otp.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { FilterUserDto } from './dto/filter-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
+// import { UpdateUserDto } from './dto/update-user.dto';
 
 // schema
 import { UserDocument } from './schema/user.schema';
@@ -30,11 +31,15 @@ export class UserService {
 		private readonly authService: AuthService
 	) {}
 
-	async signup(signupUserDto: SignUpUserDto) {
+	async signup(
+		signupUserDto: SignUpUserDto
+	): Promise<{ token: string; users: UserDocument }> {
 		const { country_code, number } = signupUserDto;
 
 		let users: UserDocument = await this.userRepo.getOne({
-			'phone_number.country_code': country_code,
+			'phone_number.country_code': country_code.includes('+')
+				? country_code
+				: `+${country_code}`,
 			'phone_number.number': number,
 			is_active: true
 		});
@@ -67,7 +72,9 @@ export class UserService {
 		}
 
 		users = await this.userRepo.insertOne({
-			'phone_number.country_code': country_code,
+			'phone_number.country_code': country_code.includes('+')
+				? country_code
+				: `+${country_code}`,
 			'phone_number.number': number,
 			'otp.value': otp,
 			'otp.expires_at': expires_at
@@ -80,7 +87,10 @@ export class UserService {
 		return { token, users };
 	}
 
-	async verify(_id: string, verifyUserDto: VerifyUserDto) {
+	async verify(
+		_id: string,
+		verifyUserDto: VerifyUserDto
+	): Promise<{ users: UserDocument }> {
 		const { otp } = verifyUserDto;
 
 		let users: UserDocument = await this.userRepo.getOne({ _id });
@@ -131,18 +141,41 @@ export class UserService {
 				)
 			}
 		);
+
+		return { users };
+	}
+
+	async findAll(filterUserDto: FilterUserDto) {
+		const { page, limit, sort } = filterUserDto;
+
+		let limits: number = limit ? +limit : 20,
+			pages: number = page ? +page : 1,
+			skip: number = pages > 1 ? (pages - 1) * limits : 0;
+
+		const condition: Record<string, unknown> = { is_active: true };
+
+		const users: UserDocument[] = await this.userRepo.getAllWithPagination(
+			condition,
+			sort,
+			skip,
+			limits
+		);
+
+		const totalResults: number = await this.userRepo.count(condition);
+
+		pages = Math.ceil(totalResults / limits);
+
+		return { users, totalResults, pages };
+	}
+
+	async findOne(_id: string) {
+		const users: UserDocument = await this.userRepo.getOne({ _id });
+
+		return { users };
 	}
 
 	// create(createUserDto: CreateUserDto) {
 	// 	return 'This action adds a new user';
-	// }
-
-	// findAll() {
-	// 	return `This action returns all user`;
-	// }
-
-	// findOne(id: number) {
-	// 	return `This action returns a #${id} user`;
 	// }
 
 	// update(id: number, updateUserDto: UpdateUserDto) {

@@ -9,14 +9,29 @@ import { PhoneNumber } from 'src/shared/schemas/phone-number.schema';
 import { s3Object } from 'src/shared/schemas/s3-object.schema';
 import { Otp } from 'src/shared/schemas/otp.schema';
 
-@Schema({ collection: 'users', timestamps: true })
+@Schema({
+	collection: 'users',
+	timestamps: true,
+	toJSON: {
+		transform: (doc: any, ret: any) => {
+			delete ret.password;
+			delete ret.__v;
+			delete ret.updatedAt;
+			delete ret.name._id;
+			delete ret.phone_number._id;
+			delete ret.profile_pic._id;
+			delete ret.otp._id;
+			return ret;
+		}
+	}
+})
 export class User {
 	@ApiProperty({ description: 'The name of the user' })
-	@Prop({ default: Name, type: Name })
+	@Prop({ default: new Name(), type: Name })
 	name: Name;
 
 	@ApiProperty({ description: 'The phone number of the user' })
-	@Prop({ default: PhoneNumber, type: PhoneNumber })
+	@Prop({ default: new PhoneNumber(), type: PhoneNumber })
 	phone_number: PhoneNumber;
 
 	@ApiProperty({ description: 'The email of the user' })
@@ -28,11 +43,11 @@ export class User {
 	password: string;
 
 	@ApiProperty({ description: 'The profile picture of the user' })
-	@Prop({ default: s3Object, type: s3Object })
+	@Prop({ default: new s3Object(), type: s3Object })
 	profile_pic: s3Object;
 
 	@ApiProperty({ description: 'The status of the document.' })
-	@Prop({ default: Otp, type: Otp })
+	@Prop({ default: new Otp(), type: Otp })
 	otp: Otp;
 
 	@ApiProperty({ description: 'Verification status of the user.' })
@@ -46,4 +61,4 @@ export class User {
 
 export type UserDocument = User & Document;
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User).index({});

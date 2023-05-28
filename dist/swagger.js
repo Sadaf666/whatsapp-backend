@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.swaggerSetup = void 0;
 const swagger_1 = require("@nestjs/swagger");
+const user_schema_1 = require("./components/user/schema/user.schema");
 const app_module_1 = require("./app.module");
+const user_module_1 = require("./components/user/user.module");
 const { BASE_URL } = process.env;
 function swaggerSetup(app) {
     const config = new swagger_1.DocumentBuilder()
@@ -19,8 +21,8 @@ function swaggerSetup(app) {
     }, 'access-token')
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config, {
-        extraModels: [],
-        include: [app_module_1.AppModule]
+        extraModels: [user_schema_1.User],
+        include: [app_module_1.AppModule, user_module_1.UserModule]
     });
     swagger_1.SwaggerModule.setup('api-docs', app, document);
 }
