@@ -4,7 +4,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Schema()
-export class s3Object {
+export class S3Object {
 	@ApiProperty({ description: 'Url from s3 bucket.' })
 	@Prop({ default: null, trim: true })
 	url: string;
@@ -22,6 +22,6 @@ export class s3Object {
 	key: string;
 }
 
-export type s3ObjectDocument = s3Object & Document;
+export type S3ObjectDocument = S3Object & Document;
 
-export const s3ObjectSchema = SchemaFactory.createForClass(s3Object);
+export const s3ObjectSchema = SchemaFactory.createForClass(S3Object);

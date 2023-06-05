@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 // schema
 import { Name } from 'src/shared/schemas/name.schema';
 import { PhoneNumber } from 'src/shared/schemas/phone-number.schema';
-import { s3Object } from 'src/shared/schemas/s3-object.schema';
+import { S3Object } from 'src/shared/schemas/s3-object.schema';
 import { Otp } from 'src/shared/schemas/otp.schema';
 
 @Schema({
@@ -43,8 +43,12 @@ export class User {
 	password: string;
 
 	@ApiProperty({ description: 'The profile picture of the user' })
-	@Prop({ default: new s3Object(), type: s3Object })
-	profile_pic: s3Object;
+	@Prop({ default: new S3Object(), type: S3Object })
+	profile_pic: S3Object;
+
+	@ApiProperty({ description: 'Device Id of the user.' })
+	@Prop({ default: [] })
+	device_id: [string];
 
 	@ApiProperty({ description: 'The status of the document.' })
 	@Prop({ default: new Otp(), type: Otp })

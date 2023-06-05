@@ -19,7 +19,7 @@ const common_3 = require("@nestjs/common");
 const common_4 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const user_service_1 = require("./user.service");
-const sigup_user_dto_1 = require("./dto/sigup-user.dto");
+const create_user_dto_1 = require("./dto/create-user.dto");
 const verify_otp_dto_1 = require("./dto/verify-otp.dto");
 const filter_user_dto_1 = require("./dto/filter-user.dto");
 const global_auth_decorator_1 = require("../../shared/decorators/global-auth.decorator");
@@ -27,14 +27,14 @@ let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
-    async signup(res, signUpUserDto) {
-        const data = await this.userService.signup(signUpUserDto);
+    async signup(res, createUserDto) {
+        const data = await this.userService.signup(createUserDto);
         if (data.users) {
             return res.status(common_4.HttpStatus.CREATED).json({
                 success: true,
                 data: data,
                 request: {
-                    body: { signUpUserDto }
+                    body: { createUserDto }
                 },
                 message: 'Game has been created.'
             });
@@ -43,7 +43,7 @@ let UserController = class UserController {
             success: false,
             data: null,
             request: {
-                body: { signUpUserDto }
+                body: { createUserDto }
             },
             message: 'Something went wrong.'
         });
@@ -110,7 +110,7 @@ __decorate([
         description: 'Internal server error.'
     }),
     (0, swagger_1.ApiBody)({
-        type: sigup_user_dto_1.SignUpUserDto,
+        type: create_user_dto_1.CreateUserDto,
         description: 'DTO to create user.'
     }),
     (0, global_auth_decorator_1.Public)(),
@@ -118,7 +118,7 @@ __decorate([
     __param(0, (0, common_3.Res)()),
     __param(1, (0, common_3.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, sigup_user_dto_1.SignUpUserDto]),
+    __metadata("design:paramtypes", [Object, create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "signup", null);
 __decorate([

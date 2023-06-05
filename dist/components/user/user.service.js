@@ -23,8 +23,8 @@ let UserService = class UserService {
         this.userRepo = userRepo;
         this.authService = authService;
     }
-    async signup(signupUserDto) {
-        const { country_code, number } = signupUserDto;
+    async signup(createUserDto) {
+        const { country_code, number, device_id } = createUserDto;
         let users = await this.userRepo.getOne({
             'phone_number.country_code': country_code.includes('+')
                 ? country_code
@@ -67,7 +67,7 @@ let UserService = class UserService {
         if (!users) {
             throw new common_2.HttpException({
                 success: false,
-                error: `User not found with this ${_id} _id.`,
+                error: `User not found for this ${_id} _id.`,
                 message: 'Cannot verify otp.'
             }, common_2.HttpStatus.BAD_REQUEST);
         }

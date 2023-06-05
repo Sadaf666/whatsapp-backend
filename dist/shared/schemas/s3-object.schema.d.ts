@@ -23,15 +23,15 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Document, Schema as MongooseSchema } from 'mongoose';
-export declare class s3Object {
+export declare class S3Object {
     url: string;
     name: string;
     file_type: string;
     key: string;
 }
-export type s3ObjectDocument = s3Object & Document;
-export declare const s3ObjectSchema: MongooseSchema<s3Object, import("mongoose").Model<s3Object, any, any, any, Document<unknown, any, s3Object> & Omit<s3Object & {
+export type S3ObjectDocument = S3Object & Document;
+export declare const s3ObjectSchema: MongooseSchema<S3Object, import("mongoose").Model<S3Object, any, any, any, Document<unknown, any, S3Object> & Omit<S3Object & {
     _id: import("mongoose").Types.ObjectId;
-}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, s3Object, Document<unknown, {}, import("mongoose").FlatRecord<s3Object>> & Omit<import("mongoose").FlatRecord<s3Object> & {
+}, never>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, S3Object, Document<unknown, {}, import("mongoose").FlatRecord<S3Object>> & Omit<import("mongoose").FlatRecord<S3Object> & {
     _id: import("mongoose").Types.ObjectId;
 }, never>>;

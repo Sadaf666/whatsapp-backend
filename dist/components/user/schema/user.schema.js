@@ -40,9 +40,14 @@ __decorate([
 ], User.prototype, "password", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The profile picture of the user' }),
-    (0, mongoose_1.Prop)({ default: new s3_object_schema_1.s3Object(), type: s3_object_schema_1.s3Object }),
-    __metadata("design:type", s3_object_schema_1.s3Object)
+    (0, mongoose_1.Prop)({ default: new s3_object_schema_1.S3Object(), type: s3_object_schema_1.S3Object }),
+    __metadata("design:type", s3_object_schema_1.S3Object)
 ], User.prototype, "profile_pic", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Device Id of the user.' }),
+    (0, mongoose_1.Prop)({ default: [] }),
+    __metadata("design:type", Array)
+], User.prototype, "device_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ description: 'The status of the document.' }),
     (0, mongoose_1.Prop)({ default: new otp_schema_1.Otp(), type: otp_schema_1.Otp }),

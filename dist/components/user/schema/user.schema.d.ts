@@ -25,14 +25,15 @@
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Name } from 'src/shared/schemas/name.schema';
 import { PhoneNumber } from 'src/shared/schemas/phone-number.schema';
-import { s3Object } from 'src/shared/schemas/s3-object.schema';
+import { S3Object } from 'src/shared/schemas/s3-object.schema';
 import { Otp } from 'src/shared/schemas/otp.schema';
 export declare class User {
     name: Name;
     phone_number: PhoneNumber;
     email: string;
     password: string;
-    profile_pic: s3Object;
+    profile_pic: S3Object;
+    device_id: [string];
     otp: Otp;
     is_verified: boolean;
     is_active: boolean;

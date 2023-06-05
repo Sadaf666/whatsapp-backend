@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { SignUpUserDto } from './dto/sigup-user.dto';
 import { VerifyUserDto } from './dto/verify-otp.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
-// import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
 // schema
@@ -32,9 +32,9 @@ export class UserService {
 	) {}
 
 	async signup(
-		signupUserDto: SignUpUserDto
+		createUserDto: CreateUserDto
 	): Promise<{ token: string; users: UserDocument }> {
-		const { country_code, number } = signupUserDto;
+		const { country_code, number, device_id } = createUserDto;
 
 		let users: UserDocument = await this.userRepo.getOne({
 			'phone_number.country_code': country_code.includes('+')
@@ -99,7 +99,7 @@ export class UserService {
 			throw new HttpException(
 				{
 					success: false,
-					error: `User not found with this ${_id} _id.`,
+					error: `User not found for this ${_id} _id.`,
 					message: 'Cannot verify otp.'
 				},
 				HttpStatus.BAD_REQUEST

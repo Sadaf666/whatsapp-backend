@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
-import { SignUpUserDto } from './dto/sigup-user.dto';
 import { VerifyUserDto } from './dto/verify-otp.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserDocument } from './schema/user.schema';
 import { UserRepository } from './repository/user.repository';
 import { AuthService } from '../auth/auth.service';
@@ -10,7 +10,7 @@ export declare class UserService {
     private readonly userRepo;
     private readonly authService;
     constructor(configService: ConfigService, userRepo: UserRepository, authService: AuthService);
-    signup(signupUserDto: SignUpUserDto): Promise<{
+    signup(createUserDto: CreateUserDto): Promise<{
         token: string;
         users: UserDocument;
     }>;

@@ -18,7 +18,7 @@ import { Response } from 'express';
 import { UserService } from './user.service';
 
 // dto
-// import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { SignUpUserDto } from './dto/sigup-user.dto';
 import { VerifyUserDto } from './dto/verify-otp.dto';
@@ -49,20 +49,20 @@ export class UserController {
 		description: 'Internal server error.'
 	})
 	@ApiBody({
-		type: SignUpUserDto,
+		type: CreateUserDto,
 		description: 'DTO to create user.'
 	})
 	@Public()
 	@Post()
-	async signup(@Res() res: Response, @Body() signUpUserDto: SignUpUserDto) {
-		const data: any = await this.userService.signup(signUpUserDto);
+	async signup(@Res() res: Response, @Body() createUserDto: CreateUserDto) {
+		const data: any = await this.userService.signup(createUserDto);
 
 		if (data.users) {
 			return res.status(HttpStatus.CREATED).json({
 				success: true,
 				data: data,
 				request: {
-					body: { signUpUserDto }
+					body: { createUserDto }
 				},
 				message: 'Game has been created.'
 			});
@@ -72,7 +72,7 @@ export class UserController {
 			success: false,
 			data: null,
 			request: {
-				body: { signUpUserDto }
+				body: { createUserDto }
 			},
 			message: 'Something went wrong.'
 		});
